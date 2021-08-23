@@ -25,6 +25,38 @@ CREATE TABLE Users (
   UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB;
 
+/*
+CREATE TABLE Users (
+id SMALLINT NOT NULL SERIAL,
+username VARCHAR(255) NOT NULL,
+firstname VARCHAR(255) NOT NULL,
+lastname VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL,
+password VARCHAR(255) NOT NULL,
+pictureurl VARCHAR(255) DEFAULT NULL,
+bio VARCHAR(255) DEFAULT NULL,
+isadmin int NOT NULL DEFAULT '0',
+PRIMARY KEY(id)
+) */
+
+-- SERIAL will create an integer column for you so you don't need to specify it.
+--  use domains for unsigned types with PostgreSQL
+/*
+CREATE TABLE Users (
+id SERIAL NOT NULL CHECK (id > 0), 
+username VARCHAR(255) NOT NULL UNIQUE,
+firstname VARCHAR(255) NOT NULL,
+lastname VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+pictureurl VARCHAR(255) DEFAULT NULL,
+bio VARCHAR(255) DEFAULT NULL,
+isadmin SMALLINT NOT NULL DEFAULT '0',
+PRIMARY KEY(id)
+); */
+
+/*ENGINE = PostgreSQL('localhost:8200', 'groupomania', 'Users', 'postgres', 'T6FaNe95');*/
+
 
 -- Création de la table des publications
 CREATE TABLE Posts (
