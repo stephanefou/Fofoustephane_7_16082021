@@ -12,7 +12,6 @@ DROP TABLE IF EXISTS Notification_types;
 -- Création de la table Utilisateurs
 CREATE TABLE Users (
   id SMALLINT unsigned NOT NULL AUTO_INCREMENT,
-  username VARCHAR(255) NOT NULL,
   firstname VARCHAR(255) NOT NULL,
   lastname VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
@@ -28,7 +27,6 @@ CREATE TABLE Users (
 /*
 CREATE TABLE Users (
 id SMALLINT NOT NULL SERIAL,
-username VARCHAR(255) NOT NULL,
 firstname VARCHAR(255) NOT NULL,
 lastname VARCHAR(255) NOT NULL,
 email VARCHAR(255) NOT NULL,
@@ -44,7 +42,6 @@ PRIMARY KEY(id)
 /*
 CREATE TABLE Users (
 id SERIAL NOT NULL CHECK (id > 0), 
-username VARCHAR(255) NOT NULL UNIQUE,
 firstname VARCHAR(255) NOT NULL,
 lastname VARCHAR(255) NOT NULL,
 email VARCHAR(255) NOT NULL UNIQUE,

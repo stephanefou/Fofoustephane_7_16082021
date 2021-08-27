@@ -27,8 +27,3 @@ module.exports = connection;
     }
     client.end();
 })*/
-
-//Sur cmd 
-//      psql -h localhost -p 8200 -U postgres test
-//sur sql shell (une fois connecté)
-//      \c test

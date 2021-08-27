@@ -7,7 +7,6 @@ Liste des utilisateurs
 | Field         | Type           | Null | Key                        | Autre                     |
 | ------------- | -------------- | ---- | -------------------------- | ------------------------- |
 | id            | SMALLINT       | NO   | PRIMARY                    | auto_increment ; unsigned |
-| username      | VARCHAR(255)   | NO   | UNIQUE                     | -                         |
 | firstname     | VARCHAR(255)   | NO   | -                          | -                         |
 | lastname      | VARCHAR(255)   | NO   | -                          | -                         |
 | email         | VARCHAR(255)   | NO   | UNIQUE                     | -                         |
@@ -18,7 +17,6 @@ Liste des utilisateurs
 
 
 > id : SMALLINT unsigned = 65 534 utilisateurs possible.
-> username : unique = 2 users différents ne peuvent pas avoir le même username 
 > email : unique = 2 users différents ne peuvent pas avoir une même adresse mail de connexion
 > la photo de profil (pictureurl) et la courte description (bio) ne sont pas obligatoires.
 
