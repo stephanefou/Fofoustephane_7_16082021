@@ -9,7 +9,6 @@ exports.signup = (req, res, next) => {
   //Cryptage Email
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString('base64');
-  /*const cryptedEmail = req.body.email;*/
   //Verification email disponible
   DB.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`,
     (error, results, rows) => {
@@ -19,7 +18,6 @@ exports.signup = (req, res, next) => {
       //Si email disponible
       } else {
       //Cryptage du MDP et ajout à la BDD (id, firstname, lastname, email, password, pictureUrl, bio, isAdmin)
-      const user = req.body
       bcrypt.hash(user.password, 10).then((hash) => {
         DB.query(
           `INSERT INTO users VALUES (
