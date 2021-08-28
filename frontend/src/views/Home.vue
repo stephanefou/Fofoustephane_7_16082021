@@ -1,6 +1,8 @@
 <template>
   <div class="home">
     <LoginForm v-if="!connected"/>
+
+    <Header v-if="connected"/>
     <Posts v-if="connected"/>
   </div>
 </template>
@@ -9,11 +11,13 @@
 // @ is an alias to /src
 import LoginForm from '@/components/LoginForm.vue';
 import Posts from '@/components/Posts.vue';
+import Header from '@/components/Header.vue';
 export default {
   name: 'Home',
   components: {
     LoginForm,
-    Posts
+    Posts,
+    Header
   },
   data() {
     return{
