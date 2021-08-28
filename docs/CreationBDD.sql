@@ -41,7 +41,7 @@ PRIMARY KEY(id)
 --  use domains for unsigned types with PostgreSQL
 /*
 CREATE TABLE Users (
-id SERIAL NOT NULL CHECK (id > 0), 
+id SERIAL NOT NULL CHECK (id > 0),
 firstname VARCHAR(255) NOT NULL,
 lastname VARCHAR(255) NOT NULL,
 email VARCHAR(255) NOT NULL UNIQUE,
@@ -56,7 +56,7 @@ PRIMARY KEY(id)
 
 
 -- Création de la table des publications
-CREATE TABLE Posts (
+CREATE TABLE posts (
   id MEDIUMINT unsigned NOT NULL AUTO_INCREMENT,
   publication_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_id SMALLINT unsigned,
@@ -64,6 +64,17 @@ CREATE TABLE Posts (
   content TEXT NOT NULL,
   PRIMARY KEY(id)
 ) ENGINE=InnoDB;
+
+/*
+CREATE TABLE posts (
+id SERIAL NOT NULL CHECK (id > 0),
+publication_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+user_id SMALLINT CHECK (id > 0),
+imageUrl VARCHAR(255),
+content TEXT NOT NULL,
+PRIMARY KEY(id)
+);
+*/
 
 
 -- Création de la table des commentaires

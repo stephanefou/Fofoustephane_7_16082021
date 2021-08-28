@@ -3,14 +3,14 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //suppression crypto
 
-const DB = require('../utils/database');
+const db = require('../utils/database');
 
 exports.signup = (req, res, next) => {
   //Cryptage Email
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString('base64');
   //Verification email disponible
-  DB.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`,
+  db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`,
     (error, results, rows) => {
       //Si email deja utilisé
       if (results > 0) {
@@ -19,7 +19,7 @@ exports.signup = (req, res, next) => {
       } else {
       //Cryptage du MDP et ajout à la BDD (id, firstname, lastname, email, password, pictureUrl, bio, isAdmin)
       bcrypt.hash(user.password, 10).then((hash) => {
-        DB.query(
+        db.query(
           `INSERT INTO users VALUES (
             nextval('users_id_seq'::regclass), --increment commentaire
             '${req.body.firstname}',
@@ -50,7 +50,7 @@ exports.login = (req, res, next) => {
   const cryptedEmail = buffer.toString('base64');
   console.log(cryptedEmail);
   //Recherche de l'utilisateur dans la BDD
-  DB.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`,
+  db.query(`SELECT * FROM users WHERE email='${cryptedEmail}'`,
     (err, results, rows) => {
       //Si utilisateur trouvé : 
       if (results.length > 0) {
@@ -78,7 +78,7 @@ exports.login = (req, res, next) => {
 
 // Delete User
 exports.deleteUser = (req, res, next) => {
-  DB.query(`DELETE FROM users WHERE users.id = ${req.params.id}`,
+  db.query(`DELETE FROM users WHERE users.id = ${req.params.id}`,
     (error, result, field) => {
       if (error) {
         return res.status(400).json({
