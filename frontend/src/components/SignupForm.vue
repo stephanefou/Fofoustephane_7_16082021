@@ -58,8 +58,7 @@ export default {
             }
             else{
                 this.message = "Vérifier le mot de passe";
-            }
-            
+            }   
         }
     }
 }
