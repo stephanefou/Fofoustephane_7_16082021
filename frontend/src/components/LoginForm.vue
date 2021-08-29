@@ -28,7 +28,7 @@ export default {
         login(){
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
-            axios.post('http://localhost:3000/api/auth/login',
+            axios.post(`${this.$apiUrl}/auth/login`,
                 {
                     email,
                     password
