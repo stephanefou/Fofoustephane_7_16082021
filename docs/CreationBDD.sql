@@ -41,7 +41,7 @@ PRIMARY KEY(id)
 --  use domains for unsigned types with PostgreSQL
 /*
 CREATE TABLE Users (
-id SERIAL NOT NULL CHECK (id > 0),
+id SERIAL CHECK (id > 0),
 firstname VARCHAR(255) NOT NULL,
 lastname VARCHAR(255) NOT NULL,
 email VARCHAR(255) NOT NULL UNIQUE,
