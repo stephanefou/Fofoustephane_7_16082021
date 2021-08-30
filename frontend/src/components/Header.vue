@@ -1,12 +1,13 @@
 <template>
     <div class="header">
-        <img src="/assets/img/groupomania-logo-header.png" alt="Groupomania logo">
         <router-link to='/'>
             <img src="/assets/img/groupomania-logo-header.png" alt="Groupomania logo">
         </router-link>
 
         <nav>
-            <div>Mon compte</div>
+            <router-link to='/profile'>
+                <div>Mon compte</div>
+            </router-link>
             <div id="disconnect-btn" @click = disconnect()>Se déconnecter</div>
         </nav>
     </div> 
