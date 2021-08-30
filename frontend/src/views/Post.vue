@@ -21,7 +21,8 @@ export default {
   },
   data() {
     return{
-      connected: true
+      connected: true,
+      authorized: true
     };
   },
   methods: {
