@@ -4,6 +4,8 @@
 
     <Header v-if="connected"/>
     <OnePost v-if="connected"/>
+
+    <Comments v-if="connected"/>
   </div>
 </template>
 
@@ -12,12 +14,14 @@
 import LoginForm from '@/components/LoginForm.vue';
 import Header from '@/components/Header.vue';
 import OnePost from '@/components/OnePost.vue';
+import Comments from '@/components/Comments.vue';
 export default {
   name: 'Post',
   components: {
     Header,
     LoginForm,
-    OnePost
+    OnePost,
+    Comments
   },
   data() {
     return{
