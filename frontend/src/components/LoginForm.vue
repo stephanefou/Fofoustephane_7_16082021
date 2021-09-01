@@ -4,13 +4,17 @@
         <nav><router-link to="/" class="active">Se connecter</router-link> | <router-link to="/signup">S'incrire</router-link></nav>
         <form @submit.prevent = login()>
 
+            <label for="login-email">Email :</label>
             <input id="login-email" type="text" placeholder="Email" required>
             
+            <label for="login-password">Mot de passe :</label>
             <input id="login-password" type="password" placeholder="Mot de passe" required>
+
+            <div class="error-message">{{message}}</div>
 
             <button id="login-btn" type="submit">Connexion</button>
 
-            <div class="error-message">{{message}}</div>
+            
         </form>
     </div>
 </template>
@@ -44,6 +48,9 @@ export default {
                 location.reload();
             })
             .catch((error) => {
+                if (error.response.status === 404) {
+                    this.message = "Utilisateur inconnu.";
+                }
                 if (error.response.status === 401) {
                     this.message = "Email ou mot de passe invalide.";
                 }
@@ -98,6 +105,23 @@ export default {
     }
     #login-btn:hover{
         transform: scale(1.025);
+    }
+    .error-message{
+        background-color: rgba(255, 0, 0, 0.301);
+    }
+    label{
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: rgb(109, 109, 109);
+        text-align: left;
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
     }
     
 </style>

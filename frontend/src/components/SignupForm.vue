@@ -3,14 +3,19 @@
         <form @submit.prevent = signup()>
             <img src="/assets/img/groupomania-logo.png" alt="Groupomania logo">
             <nav><router-link to="/">Se connecter</router-link> | <router-link to="/signup" class="active">S'incrire</router-link></nav>
+            <label for="signup-nom">Nom :</label>
             <input id="signup-nom" type="text" placeholder="Nom" required>
             
+            <label for="signup-prenom">Prenom :</label>
             <input id="signup-prenom" type="text" placeholder="Prenom" required>
 
+            <label for="signup-password">Mot de passe :</label>
             <input id="signup-password" type="password" placeholder="Mot de passe" required>
 
+            <label for="signup-password-verification">Vérification du mot de passe :</label>
             <input id="signup-password-verification" type="password" placeholder="Vérifier mot de passe" required>
 
+            <label for="signup-email">Email :</label>
             <input id="signup-email" type="email" placeholder="Email" required>
 
             <div class="error-message">{{message}}</div>
@@ -50,15 +55,21 @@ export default {
                         }
                     }
                 )
-                .then( res =>{
-                        console.log(res);
-                        location.href = "/";
+                .then(res => {
+                    if(res.status === 201) {
+                         location.href = '/';
                     }
-                )
+                })
+                .catch((error) => {
+                    if (error.response.status === 401) {
+                        this.message = "Email non disponible.";
+                    }  
+                });
             }
-            else{
+            else if( password != passwordVerif){
                 this.message = "Vérifier le mot de passe";
-            }   
+            }
+            
         }
     }
 }
@@ -109,6 +120,20 @@ export default {
     }
     #signup-btn:hover{
         transform: scale(1.025);
+    }
+    label{
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: rgb(109, 109, 109);
+        text-align: left;
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
     }
     
 </style>

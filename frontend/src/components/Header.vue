@@ -20,7 +20,7 @@ export default {
     methods: {
         disconnect(){
             localStorage.removeItem('user');
-            location.reload();
+            location.href = "/";
         }
     }
 }
@@ -51,5 +51,11 @@ export default {
     }
     nav div:hover{
         color: rgb(117, 117, 117);
+    }
+    @media (max-width: 670px) {
+        .header{
+            flex-direction: column;
+            padding: 30px 20px 20px 20px;
+        }
     }
 </style>

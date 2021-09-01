@@ -19,7 +19,7 @@ body{
   color: #2c3e50;
   box-sizing: border-box;
 }
- a {
+a {
   color: inherit;
   text-decoration: none;
 }
