@@ -1,15 +1,15 @@
 <template>
     <div class="posts">
-        <div class="post" v-for = "post in posts" :key="post.id">
+        <article class="post" v-for = "post in posts" :key="post.id">
             <router-link :to="{ name: 'Post', params: { id: post.id } }">
                 <div class="post-header">
                     <span class="post-info">Posté {{post.date}} par {{post.prenom}} {{post.nom}}</span>
                     <span class="post-modify" v-if="post.userId == $user.userId || $user.admin == 1">Modifier</span> 
                 </div>  
                 <h2 class="post-title">{{post.title}}</h2>
-                <div class="post-content">{{characterLimit(post.content)}}</div>
+                <div class="post-content" v-html="characterLimit(post.content)"></div>
             </router-link>
-        </div>
+        </article>
     </div>
 </template>
 
@@ -28,7 +28,7 @@ export default {
             this.getAllPost();
         }
         //Export de la fonction
-        this.$root.$on('component1', () => {
+        this.$root.$on('Posts', () => {
             this.getAllPost();
         });
     },
@@ -84,11 +84,12 @@ export default {
     .post-header{
         display: flex;
         justify-content: space-between;
-        color: rgb(175, 175, 175);
+        color: rgb(0, 0, 0);
         font-size: .8rem;
     }
     .post-modify{
         color: rgb(255, 60, 60);
+        font-weight: bold;
     }
     .post-content{
         font-size: .9rem;

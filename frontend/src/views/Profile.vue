@@ -83,6 +83,7 @@ methods: {
   .delete-profile{
     color: red;
     margin-bottom: 30px;
+    font-size: 24px;
     cursor: pointer;
   }
 </style>
