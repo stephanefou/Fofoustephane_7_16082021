@@ -7,7 +7,7 @@
                     <span class="post-modify" v-if="post.userId == $user.userId || $user.admin == 1">Modifier</span> 
                 </div>  
                 <h2 class="post-title">{{post.title}}</h2>
-                <div class="post-content">{{post.content}}</div>
+                <div class="post-content">{{characterLimit(post.content)}}</div>
             </router-link>
         </div>
     </div>
@@ -27,6 +27,10 @@ export default {
         if(localStorage.user != undefined){
             this.getAllPost();
         }
+        //Export de la fonction
+        this.$root.$on('component1', () => {
+            this.getAllPost();
+        });
     },
     methods: {
         getAllPost(){
@@ -41,6 +45,16 @@ export default {
             .then(res => {
                 this.posts = res.data;
             })
+        },
+        characterLimit(content){
+            let text = content;
+            const maxLength = 350;
+            if(text.length > maxLength){
+                return text.substring(0, maxLength - 3) + "...";
+            }
+            else{
+                return text;
+            }
         }
     }
 }

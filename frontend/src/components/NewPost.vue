@@ -46,7 +46,8 @@
                           }
                       }
                   )
-                  .then( this.visible = false);
+                  .then( this.visible = false)
+                  .then(this.$root.$emit('component1'));
           }
       }
   }

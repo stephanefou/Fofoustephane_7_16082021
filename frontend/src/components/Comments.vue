@@ -82,7 +82,7 @@
                       }
                   }
               )
-              .then(this.getAllComments())
+              .then(this.getAllComments());
           }
       }
   }
