@@ -54,6 +54,9 @@ export default {
                 if (error.response.status === 401) {
                     this.message = "Email ou mot de passe invalide.";
                 }
+                if (error.response.status === 400) {
+                    this.message = "Tous les champs doivent être remplis.";
+                }
                 if (error.response.status === 500) {
                     this.message = "Erreur serveur.";
                 }

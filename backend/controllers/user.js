@@ -1,9 +1,8 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-//suppression crypto
 
-const db = require('../utils/database');
+const User = require('../models/User');
 
 exports.signup = (req, res, next) => {
   //Cryptage Email
@@ -47,37 +46,36 @@ exports.signup = (req, res, next) => {
 };
 
 //Connexion
-exports.login = (req, res, next) => {
-  const buffer = Buffer.from(req.body.email);
-  const cryptedEmail = buffer.toString('base64');
-  console.log(cryptedEmail);
-  //Recherche de l'utilisateur dans la BDD
-  db.query(`SELECT * FROM "Users" WHERE email='${cryptedEmail}'`,
-    (err, results, rows) => {
-      //Si utilisateur trouvé :
-      console.log(results[0]);
-      if (results > 0) {
-        //Verification du MDP
-        bcrypt.compare(req.body.password, results[0].password).then((valid) => {
-          //Si MDP invalide erreur
-          if (!valid) {
-            res.status(401).json({message: 'Mot de passe incorrect.'});
-          //Si MDP valide création d'un token
-          } else {
-            res.status(200).json({
-              userId: results[0].id,
-              nom: results[0].nom,
-              prenom: results[0].prenom,
-              admin: results[0].admin,
-              token: jwt.sign({userId: results[0].id}, process.env.TOKEN, {expiresIn: '24h'})
-            });
-          }
-        });
-      } else {
-        res.status(404).json({message: 'Utilisateur inconnu.'});
-      }
-    }
-  );
+exports.login = (req, res) => {
+  if (!req.body.email || !req.body.password) {
+      return res.status(400).json({ error: "Tous les champs doivent être remplis" });
+  }
+  
+  if (req.body.email) {
+      User.findOne({ where: { email: req.body.email } })
+          .then(user => {
+              if (user) {
+                  bcrypt.compare(req.body.password, user.password)
+                      .then(valid => {
+                          if (!valid) {
+                              res.status(401).json({ error: "Mot de passe incorrect" });
+                          } else {
+                              res.status(200).json({ 
+                                  firstname: user.firstname,
+                                  admin: user.admin,
+                                  token: jwt.sign({ userId: user.id }, 'Gq8SZFSVIehzomW9QSjRUZ7Vlc5ykogXJMebbe3M', { expiresIn: '24h' }) 
+                              });
+                          }
+                      })
+                      .catch(error => res.status(500).json({ error }));
+              } else {
+                  res.status(401).json({ error: "Connexion refusée" });
+              }
+          })
+          .catch(error => res.status(500).json({ error }))
+  } else {
+      res.status(401).json({ error: "Mot de passe incorrect" });
+  }
 };
 
 // Delete User
