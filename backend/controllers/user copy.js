@@ -93,8 +93,20 @@ exports.login = (req, res) => {
       .catch(err => { res.status(500).json({ err }) })
 };
 
-exports.deleteUser = (req, res, next) => {
-    User.destroy({ where: { id: req.body.userId } })
-        .then(() => res.status(200).json({ message: "Utilisateur supprimé de la base de données" }))
+exports.deleteUser = (req, res) => {
+    User.findOne({ where: { email: req.body.email } })
+        .then(user => {
+            bcrypt.compare(req.body.password, user.password)
+                .then(valid => {
+                    if (!valid) {
+                    res.status(400).json({ error: "Mot de passe incorrect" });
+                    } else {
+                        User.destroy({ where: { email: req.body.email } })
+                            .then(() => res.status(200).json({ message: "Utilisateur supprimé de la base de données" }))
+                            .catch(error => res.status(500).json({ error }));
+                    }
+                })
+                .catch(error => res.status(500).json({ error }))
+        })
         .catch(error => res.status(500).json({ error }));
-}
+};
