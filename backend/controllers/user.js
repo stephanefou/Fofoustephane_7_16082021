@@ -85,17 +85,17 @@ exports.login = (req, res, next) => {
 // Delete User
 exports.deleteUser = (req, res, next) => {
   db.query(`DELETE FROM "Users" WHERE id = ${req.params.id}`,
-    (error, results, rows) => {
-      rows = results.rows;
-      console.log(results);
-      console.log(results.rows);
+    (error, result, rows) => {
+      rows = result.rows;
+      console.log(result);
+      console.log(result.rows);
       console.log(rows.length);
-      console.log(results.length);
+      console.log(result.length);
       if (error) {
         return res.status(400).json({
             error
         });
       }
-      return res.status(200).json({rows});
+      return res.status(200).json(results);
   });
 };

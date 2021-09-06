@@ -27,6 +27,7 @@ exports.getAllPost = (req, res, next) => {
         return res.status(200).json({rows});
     });
 };
+
 // NewPost
 exports.newPost = (req, res, next) => {
     db.query(
@@ -90,6 +91,7 @@ exports.getUserPosts = (req, res, next) => {
         rows = result.rows;
         console.log(result);
         console.log(result.rows);
+        console.log(rows);
         console.log(rows.length);
         console.log(result.length);
         if (error) {
