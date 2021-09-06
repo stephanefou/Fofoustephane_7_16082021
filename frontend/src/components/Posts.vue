@@ -1,12 +1,12 @@
 <template>
     <div class="posts">
-        <article class="post" v-for = "post in posts" :key="post.id">
+        <article class="post" v-for = "post in Posts" :key="post.id">
             <router-link :to="{ name: 'Post', params: { id: post.id } }">
                 <div class="post-header">
-                    <span class="post-info">Posté le {{dateFormat(post.date)}} par {{post.prenom}} {{post.nom}}</span>
-                    <span class="post-modify" v-if="post.userId == $user.userId || $user.admin == 1">Modifier</span> 
+                    <span class="post-info">Posté {{post.publication_date}} par {{post.firstname}} {{post.lastname}}</span>
+                    <span class="post-modify" v-if="post.user_id == $user.user_id || $user.admin == 1">Modifier</span> 
                 </div>  
-                <h2 class="post-title">{{post.title}}</h2>
+                <h2 class="post-title">{{Posts.title}}</h2>
                 <div class="post-content" v-html="characterLimit(post.content)"></div>
             </router-link>
         </article>
@@ -55,11 +55,6 @@ export default {
             else{
                 return text;
             }
-        },
-        dateFormat(date){
-            const event = new Date(date);
-            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-            return event.toLocaleDateString('fr-FR', options);
         }
     }
 }
@@ -95,9 +90,6 @@ export default {
     .post-modify{
         color: rgb(255, 60, 60);
         font-weight: bold;
-    }
-    .post-title{
-        color: red;
     }
     .post-content{
         font-size: .9rem;

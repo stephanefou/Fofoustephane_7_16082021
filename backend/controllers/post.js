@@ -2,7 +2,17 @@ const db = require("../utils/database.js");
 
 // All post
 exports.getAllPost = (req, res, next) => {
-    db.query('SELECT users.nom, users.prenom, posts.id, posts.userId, posts.title, posts.content, posts.date AS date FROM users INNER JOIN posts ON users.id = posts.userId ORDER BY date DESC', (error, result, field) => {
+    db.query(
+        `SELECT
+            "Users".lastname,
+            "Users".firstname,
+            "Posts".id,
+            "Posts".user_id,
+            "Posts".title,
+            "Posts".content,
+            "Posts".publication_date AS date FROM "Users" INNER JOIN "Posts" ON "Users".id = "Posts".User_id ORDER BY date DESC
+            `,
+        (error, result, field) => {
         if (error) {
             return res.status(400).json({
                 error
@@ -13,12 +23,18 @@ exports.getAllPost = (req, res, next) => {
 };
 // NewPost
 exports.newPost = (req, res, next) => {
-    db.query(`INSERT INTO posts VALUES (NULL, '${req.body.userId}', '${req.body.title}', NOW(), '${req.body.content}')`, (error, result, field) => {
-        if (error) {
-            return res.status(400).json({
-                error
-            });
-        }
+    db.query(
+        `INSERT INTO "Posts" VALUES (
+            nextval('users_id_seq'::regclass), --increment commentaire
+            NOW(),
+            '${req.body.userId}',
+            '${req.body.title}',
+            '${req.body.content}'
+        )`,
+        (error, result, field) => {
+            if (error) {
+                return res.status(400).json({error});
+            }
         return res.status(201).json({
             message: 'Votre post à été publié !'
         })
@@ -59,13 +75,18 @@ exports.modifyOnePost = (req, res, next) => {
 };
 // Get User's Posts
 exports.getUserPosts = (req, res, next) => {
-    db.query(`SELECT * FROM posts WHERE posts.userId = ${req.body.userId}`, (error, result, field) => {
+    db.query(`SELECT * FROM "Posts" WHERE user_id = ${req.body.userId}`, (error, result, rows) => {
+        rows = result.rows;
+        console.log(result);
+        console.log(result.rows);
+        console.log(rows.length);
+        console.log(result.length);
         if (error) {
             return res.status(400).json({
                 error
             });
         }
-        return res.status(200).json(result);
+        return res.status(200).json({rows});
     });
 };
 // New comment
@@ -81,7 +102,7 @@ exports.newComment = (req, res, next) => {
 };
 // Get all comments
 exports.getAllComments = (req, res, next) => {
-    db.query(`SELECT users.id, users.nom, users.prenom, comments.id,comments.content, comments.userId, comments.date
+    db.query(`SELECT users.id, users.nom, users.prenom, comments.id,comments.content, comments.userId, DATE_FORMAT(comments.date, "le %e %M %Y à %kh%i") AS date
     FROM users INNER JOIN comments ON users.id = comments.userId 
      WHERE comments.postId = ${req.body.postId} 
      ORDER BY comments.date DESC`,

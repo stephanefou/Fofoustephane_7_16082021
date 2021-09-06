@@ -36,16 +36,16 @@ export default {
     },
     methods: {
         signup(){
-            const lastName = document.getElementById("signup-lastname").value;
-            const firstName = document.getElementById("signup-firstname").value;
+            const lastname = document.getElementById("signup-lastname").value;
+            const firstname = document.getElementById("signup-firstname").value;
             const password = document.getElementById("signup-password").value;
             const passwordVerif = document.getElementById("signup-password-verification").value;
             const email = document.getElementById("signup-email").value;
             if(password === passwordVerif){
                 axios.post(`${this.$apiUrl}/auth/signup`,
                     {
-                        lastName,
-                        firstName,
+                        lastname,
+                        firstname,
                         email,
                         password
                     },

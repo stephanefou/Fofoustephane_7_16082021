@@ -1,112 +1,97 @@
-// Fonction concernant le Login, Signup, Acces aux infos d un utilisateur, 
-// suppression d un utilisateur et Like d'une publication.
-
-// Le role d'un utilisateur est : 
-// 0 : s'il a créé un compte mais n'est pas encore modéré.
-// 1 : s'il est modéré, et peut donc avoir accés aux fonctionnalités de base
-// (Creer un Article, un Commentaire, liker, modifier/supprimer sa publication ou
-// supprimer son compte)
-// 2 : s'il est Administrateur. Il pourra modérer les publicaitons,
-// et avoir accés aux statistiques de l'applicaiton. Aussi , l'administateur n'a pas 
-// à moderer ses propres publications. 
-
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const models = require('../models');
-const jwtoken = require('../utils/jwtoken');
-const checkInput = require('../utils/checkInput');
+//suppression crypto
 
-const User = require('../models/User')
+const db = require('../utils/database');
 
-//Creation d un compte en cryptant password, creer un nouvel utilisateur et enregistre données.
-exports.signup = (req, res) => {
-  let firstName = req.body.firstName;
-  let lastName = req.body.lastName;
-  let email = req.body.email;
-  let password = req.body.password;
-  if (email == null || lastName == null || firstName == null || password == null) {
-      res.status(400).json({ error: 'Tous les champs sont obligatoires' })
-  }
-  //Vérification inputs user par path => utils/checkinputs.js
-  let emailOK = checkInput.validEmail(email);
-      if (emailOK == true) {
-          //Vérification si utilisateur n'existe pas déjà
-          User.findOne({
-              attributes: ['email'],
-              where: { email: email }
-          })
-          .then(user => {
-              if (!user) {
-                  bcrypt.hash(password, 10, function (error, hash) {
-                      //Création user
-                      User.create({
-                          firstName: firstName,
-                          lastName: lastName,
-                          password: hash,
-                          email: email
-                      })
-                          .then(userNew => { res.status(201).json({ 'Utilisateur créé ! Id': userNew.idUser }) })
-                          .catch(err => {
-                              res.status(500).json({ error })
-                          })
-                  })
-              } else {
-                  res.status(400).json({ error: 'Cet utilisateur existe déjà' })
-              }
-          })
-          .catch(error => { res.status(501).json({ error }) })
+exports.signup = (req, res, next) => {
+  //Cryptage Email
+  const buffer = Buffer.from(req.body.email);
+  const cryptedEmail = buffer.toString('base64');
+  //Verification email disponible
+  db.query(`SELECT * FROM "Users" WHERE email='${cryptedEmail}'`,
+    (error, results, rows) => {
+      //Si email deja utilisé
+      console.log(results[0]);
+      if (results > 0) {
+        res.status(401).json({message: 'Email non disponible.'});
+      //Si email disponible
       } else {
-          console.log('Erreur')
-      }
-};
-
-//Connexion de l'utilisateur à son compte
-exports.login = (req, res) => {
-  //Récupération et validation des paramètres
-  let email = req.body.email;
-  let password = req.body.password;
-      if (email == null || password == null) {
-          res.status(400).json({ error: 'Il manque une information' })
-      }
-      //Utilisteur existe-t-il?
-      User.findOne({
-          where: { email: email }
-      })
-      .then(user => {
-          if (user) {
-              bcrypt.compare(password, user.password).then((valid) => {
-                  if(!valid) {
-                    res.status(403).json({ error: 'invalid password' });
-                  } else {
-                    res.status(200).json({
-                      userId: user.id,
-                      name: user.firstName,
-                      admin: user.admin,
-                      token: jwtoken.generateToken(user)
-                    })
-                  };
-              })
-          } else {
-              res.status(404).json({ 'erreur': 'Cet utilisateur n\'existe pas' })
-          }
-      })
-      .catch(err => { res.status(500).json({ err }) })
-};
-
-exports.deleteUser = (req, res) => {
-    User.findOne({ where: { email: req.body.email } })
-        .then(user => {
-            bcrypt.compare(req.body.password, user.password)
-                .then(valid => {
-                    if (!valid) {
-                    res.status(400).json({ error: "Mot de passe incorrect" });
-                    } else {
-                        User.destroy({ where: { email: req.body.email } })
-                            .then(() => res.status(200).json({ message: "Utilisateur supprimé de la base de données" }))
-                            .catch(error => res.status(500).json({ error }));
-                    }
-                })
-                .catch(error => res.status(500).json({ error }))
+        //Cryptage du MDP et ajout à la BDD (id, firstname, lastname, email, password, pictureUrl, bio, isAdmin)
+        bcrypt.hash(req.body.password, 10).then((hash) => {
+          db.query(
+            `INSERT INTO "Users" VALUES (
+              nextval('users_id_seq'::regclass), --increment commentaire
+              '${req.body.firstname}',
+              '${req.body.lastname}',
+              '${cryptedEmail}',
+              '${hash}',
+              NULL,
+              NULL,
+              0
+            )`,
+            (error, results, fields) => {
+              if (error) {
+                console.log(error);
+                return res.status(400).json("erreur");
+              } 
+              return res.status(201).json({message: 'Votre compte a bien été créé !'});
+            }
+          );
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({error}));
+      }
+    }
+  );
+};
+
+//Connexion
+exports.login = (req, res, next) => {
+  const email = req.body.email;
+  console.log(email);
+  //Recherche de l'utilisateur dans la BDD
+  db.query(`SELECT * FROM "Users" WHERE email = 'stef3@gmail.com'`,
+    (err, results, rows) => {
+      //Si utilisateur trouvé :
+      rows = results.rows;
+      console.log(results);
+      console.log(results.rows);
+      console.log(rows.length);
+      console.log(results.length);
+      if (results.length > 0) {
+        //Verification du MDP
+        bcrypt.compare(req.body.password, results[0].password).then((valid) => {
+          //Si MDP invalide erreur
+          if (!valid) {
+            res.status(401).json({message: 'Mot de passe incorrect.'});
+          //Si MDP valide création d'un token
+          } else {
+            res.status(200).json({
+              userId: results[0].id,
+              nom: results[0].nom,
+              prenom: results[0].prenom,
+              admin: results[0].admin,
+              token: jwt.sign({userId: results[0].id}, process.env.TOKEN, {expiresIn: '24h'})
+            });
+          }
+        });
+      } else {
+        res.status(404).json({message: 'Utilisateur inconnu.'});
+      }
+    }
+  );
+};
+
+// Delete User
+exports.deleteUser = (req, res, next) => {
+  db.query(`DELETE FROM users WHERE users.id = ${req.params.id}`,
+    (error, result, field) => {
+      if (error) {
+        return res.status(400).json({
+            error
+        });
+      }
+      return res.status(200).json(result);
+  });
 };
