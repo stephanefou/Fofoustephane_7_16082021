@@ -5,7 +5,7 @@
       <Header v-if="connected"/>
       <div class="profile-info">
           <h2>Bonjour,</h2>
-          <span>{{this.$user.firstname}}</span> <span>{{this.$user.firstname}}</span>
+          <span>{{this.$user.firstname}}  {{this.$user.lastname}}</span>
       </div>
 
       <div class="delete-profile" @click="deleteUser()">Supprimer le compte</div>
@@ -81,7 +81,9 @@ methods: {
       font-size: 3rem;
   }
   .delete-profile{
+    width: 300px;
     color: red;
+    margin: auto;
     margin-bottom: 30px;
     font-size: 24px;
     cursor: pointer;

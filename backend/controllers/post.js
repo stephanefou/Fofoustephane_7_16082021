@@ -10,15 +10,21 @@ exports.getAllPost = (req, res, next) => {
             "Posts".user_id,
             "Posts".title,
             "Posts".content,
-            "Posts".publication_date AS date FROM "Users" INNER JOIN "Posts" ON "Users".id = "Posts".User_id ORDER BY date DESC
-            `,
-        (error, result, field) => {
+            "Posts".publication_date AS date
+        FROM "Users" INNER JOIN "Posts" ON "Users".id = "Posts".User_id
+        ORDER BY date DESC`,
+        (error, result, rows) => {
+            rows = result.rows;
+            console.log(result);
+            console.log(result.rows);
+            console.log(rows.length);
+          //console.log(result.length);
         if (error) {
             return res.status(400).json({
                 error
             });
         }
-        return res.status(200).json(result);
+        return res.status(200).json({rows});
     });
 };
 // NewPost
@@ -42,13 +48,18 @@ exports.newPost = (req, res, next) => {
 };
 // OnePost
 exports.getOnePost = (req, res, next) => {
-    db.query(`SELECT * FROM posts WHERE posts.id = ${req.body.postId}`, (error, result, field) => {
+    db.query(`SELECT * FROM "Posts" WHERE id = ${req.body.postId}`, (error, result, rows) => {
+        rows = result.rows;
+        console.log(result);
+        console.log(result.rows);
+        console.log(rows.length);
+        console.log(result.length);
         if (error) {
             return res.status(400).json({
                 error
             });
         }
-        return res.status(200).json(result);
+        return res.status(200).json({rows});
     });
 };
 // Delete OnePost

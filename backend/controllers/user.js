@@ -10,7 +10,7 @@ exports.signup = (req, res, next) => {
   const buffer = Buffer.from(req.body.email);
   const cryptedEmail = buffer.toString('base64');
   //Verification email disponible
-  db.query(`SELECT * FROM "Users" WHERE email='${cryptedEmail}'`,
+  db.query(`SELECT * FROM "Users" WHERE email = '${cryptedEmail}'`,
     (error, results, rows) => {
       //Si email deja utilisé
       console.log(results[0]);
@@ -27,9 +27,7 @@ exports.signup = (req, res, next) => {
               '${req.body.lastname}',
               '${cryptedEmail}',
               '${hash}',
-              NULL,
-              NULL,
-              0
+              Default
             )`,
             (error, results, fields) => {
               if (error) {
@@ -48,10 +46,11 @@ exports.signup = (req, res, next) => {
 
 //Connexion
 exports.login = (req, res, next) => {
-  const email = req.body.email;
-  console.log(email);
+  const buffer = Buffer.from(req.body.email);
+  const cryptedEmail = buffer.toString('base64');
+  console.log(cryptedEmail);
   //Recherche de l'utilisateur dans la BDD
-  db.query(`SELECT * FROM "Users" WHERE email = 'stef3@gmail.com'`,
+  db.query(`SELECT * FROM "Users" WHERE email = '${cryptedEmail}'`,
     (err, results, rows) => {
       //Si utilisateur trouvé :
       rows = results.rows;
@@ -69,8 +68,8 @@ exports.login = (req, res, next) => {
           } else {
             res.status(200).json({
               userId: rows[0].id,
-              nom: rows[0].lastname,
-              prenom: rows[0].firstname,
+              lastname: rows[0].lastname,
+              firstname: rows[0].firstname,
               admin: rows[0].admin,
               token: jwt.sign({userId: rows[0].id}, process.env.TOKEN, {expiresIn: '24h'})
             });
@@ -85,13 +84,18 @@ exports.login = (req, res, next) => {
 
 // Delete User
 exports.deleteUser = (req, res, next) => {
-  db.query(`DELETE FROM users WHERE users.id = ${req.params.id}`,
-    (error, result, field) => {
+  db.query(`DELETE FROM "Users" WHERE id = ${req.params.id}`,
+    (error, results, rows) => {
+      rows = results.rows;
+      console.log(results);
+      console.log(results.rows);
+      console.log(rows.length);
+      console.log(results.length);
       if (error) {
         return res.status(400).json({
             error
         });
       }
-      return res.status(200).json(result);
+      return res.status(200).json({rows});
   });
 };
