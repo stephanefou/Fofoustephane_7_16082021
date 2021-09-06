@@ -15,31 +15,29 @@ import axios from 'axios';
 export default {
   name: 'UserPosts',
   data(){
-      return{
-          posts: []
-      }
-  },
-  mounted(){
-      this.getUserPosts();
-  },
-  methods: {
-      getUserPosts(){
-          const userId = this.$user.userId;
-          
-          axios.post(`${this.$apiUrl}/posts/getUserPosts`,
-              {
-                  userId,
-              },
-              {
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${this.$token}`
-                  }
-              }
-          )
-          .then(res => this.posts = res.data)
-      }
-  }
+        return{
+            posts: []
+        }
+    },
+    mounted(){
+        this.getUserPosts();
+    },
+    methods: {
+        getUserPosts(){
+            const userId = this.$user.userId;
+            
+            axios.get(`${this.$apiUrl}/posts/user${userId}/posts`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.$token}`
+                    }
+                }
+            )
+            .then(res => this.posts = res.data.rows)
+            console.log(this.posts.rows)
+        }
+    }
 }
 </script>
 

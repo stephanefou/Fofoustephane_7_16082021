@@ -2,7 +2,7 @@
   <div class="UserProfile">
       <div class="profile-info">
           <h2>Bonjour,</h2>
-          <span>{{this.$user.lastname}}</span> <span>{{this.$user.firstname}}</span>
+          <span>{{this.$user.lastname}}</span> <span class="space">.</span> <span>{{this.$user.firstname}}</span>
       </div>
 
       <div class="delete-profile" @click="deleteUser()">Supprimer le compte</div>
@@ -18,7 +18,7 @@ export default {
   methods: {
     deleteUser(){
       const userId = this.$user.userId;
-      axios.delete(`${this.$apiUrl}/${userId}`,
+      axios.delete(`${this.$apiUrl}/auth/${userId}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -26,8 +26,8 @@ export default {
             }
           }
       )
-      .then(localStorage.removeItem('user'))
-      .then(location.href = "/");
+      /*.then(localStorage.removeItem('user'))
+      .then(location.href = "/");*/
     }
   }
 }
@@ -38,6 +38,9 @@ export default {
       margin: 50px auto;
       max-width: 800px;
       /* text-align: left; */
+  }
+  .space{
+    color: white;
   }
   .profile-info h2 {
       margin-bottom: 20px;

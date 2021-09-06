@@ -63,7 +63,7 @@
               const title = document.getElementById("newPost-title").value;
               const content = this.content;
               console.log(content);
-              axios.post(`${this.$apiUrl}/posts/newPost`,
+              axios.post(`${this.$apiUrl}/posts/`,
                       {
                           userId: this.$user.userId,
                           title,
@@ -94,7 +94,7 @@
           background-color: rgb(255, 34, 34);
           color: white;
           max-width: 750px;
-          font-size: 1.2rem;
+          font-size: 1.5rem;
           transition-duration: 0.2s;
           cursor: pointer;
       }

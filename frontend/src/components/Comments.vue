@@ -10,8 +10,8 @@
           <h2 v-if="comments.length > 0">Commentaires :</h2>
   
           <div class="comments">
-              <div class="comment" v-for="comment in comments" :key="comment.id">
-              <div class="comment-info">Par {{comment.prenom}} {{comment.nom}}  {{comment.date}} 
+                <div class="comment" v-for="comment in comments" :key="comment.id">
+                <div class="comment-info">Par {{comment.firstname}} {{comment.lastname}} le {{dateFormat(comment.date)}} 
                   <span @click="deleteComment(comment.id)" v-if="comment.userId == $user.userId || $user.admin == 1" :key="comment.id">Supprimer</span>
               </div>
               {{comment.content}}
@@ -38,10 +38,9 @@
               const postId = parseInt(this.$route.params.id);
               const userId = this.$user.userId;
               const content = document.getElementById('new-comment').value;
-              axios.post(`${this.$apiUrl}/posts/newComment`,
+              axios.post(`${this.$apiUrl}/posts/${postId}/comment/`,
                   {
                       userId,
-                      postId,
                       content
                   },
                   {
@@ -55,10 +54,7 @@
           },
           getAllComments(){
               const postId = parseInt(this.$route.params.id);
-              axios.post(`${this.$apiUrl}/posts/getAllComments`,
-                  {
-                      postId
-                  },
+              axios.get(`${this.$apiUrl}/posts/${postId}/comments`,
                   {
                       headers: {
                           'Content-Type': 'application/json',
@@ -71,10 +67,7 @@
               });
           },
           deleteComment(commentId){
-              axios.post(`${this.$apiUrl}/posts/deleteComment`,
-                  {
-                      commentId
-                  },
+            axios.delete(`${this.$apiUrl}/posts/comment/${commentId}`,
                   {
                       headers: {
                           'Content-Type': 'application/json',
@@ -83,6 +76,11 @@
                   }
               )
               .then(this.getAllComments());
+            },
+            dateFormat(date){
+                const event = new Date(date);
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+                return event.toLocaleDateString('fr-FR', options);
           }
       }
   }

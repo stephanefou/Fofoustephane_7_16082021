@@ -49,7 +49,8 @@ exports.newPost = (req, res, next) => {
 };
 // OnePost
 exports.getOnePost = (req, res, next) => {
-    db.query(`SELECT * FROM "Posts" WHERE id = ${req.body.postId}`, (error, result, rows) => {
+    db.query(`SELECT * FROM "Posts" WHERE id = ${req.params.id}`,
+    (error, result, rows) => {
         rows = result.rows;
         console.log(result);
         console.log(result.rows);
@@ -87,11 +88,11 @@ exports.modifyOnePost = (req, res, next) => {
 };
 // Get User's Posts
 exports.getUserPosts = (req, res, next) => {
-    db.query(`SELECT * FROM "Posts" WHERE user_id = ${req.body.userId}`, (error, result, rows) => {
+    db.query(`SELECT * FROM "Posts" WHERE user_id = ${req.params.id}`, 
+    (error, result, rows) => {
         rows = result.rows;
         console.log(result);
         console.log(result.rows);
-        console.log(rows);
         console.log(rows.length);
         console.log(result.length);
         if (error) {
@@ -104,13 +105,26 @@ exports.getUserPosts = (req, res, next) => {
 };
 // New comment
 exports.newComment = (req, res, next) => {
-    db.query(`INSERT INTO comments VALUES (NULL, ${req.body.userId}, ${req.body.postId}, NOW(), '${req.body.content}')`, (error, result, field) => {
+    db.query(
+        `INSERT INTO "Comments" VALUES (
+            Default,
+            ${req.body.userId},
+            ${req.body.postId},
+            NOW(),
+            '${req.body.content}'
+        )`,
+        (error, result, rows) => {
+        rows = result.rows;
+        console.log(result);
+        console.log(result.rows);
+        console.log(rows.length);
+        console.log(result.length);
         if (error) {
             return res.status(400).json({
                 error
             });
         }
-        return res.status(200).json(result);
+        return res.status(200).json({rows});
     });
 };
 // Get all comments

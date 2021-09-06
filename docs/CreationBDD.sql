@@ -75,6 +75,15 @@ content TEXT NOT NULL,
 PRIMARY KEY(id)
 );
 */
+/*CREATE TABLE Comments (
+id SERIAL NOT NULL CHECK (id > 0),
+user_id SMALLINT CHECK (id > 0),
+post_id SMALLINT CHECK (id > 0),
+publication_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+imageUrl VARCHAR(255),
+content TEXT NOT NULL,
+PRIMARY KEY(id)
+);
 
 
 -- Création de la table des commentaires

@@ -3,7 +3,7 @@
         <article class="post" v-for = "post in posts" :key="post.id">
             <router-link :to="{ name: 'Post', params: { id: post.id } }">
                 <div class="post-header">
-                    <span class="post-info">Posté {{post.date}} par {{post.firstname}} {{post.lastname}}</span>
+                    <span class="post-info">Posté {{dateFormat(post.date)}} par {{post.firstname}} {{post.lastname}}</span>
                     <span class="post-modify" v-if="post.user_id == $user.user_id || $user.admin == 1">Modifier</span> 
                 </div>  
                 <h2 class="post-title">{{post.title}}</h2>
@@ -34,7 +34,7 @@ export default {
     },
     methods: {
         getAllPost(){
-            axios.get(`${this.$apiUrl}/posts/getAllPost`,
+            axios.get(`${this.$apiUrl}/posts/`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -43,9 +43,10 @@ export default {
                 }
             )
             .then(res => {
-                this.posts = res.data;
+                this.posts = res.data.rows;
+                console.log(this.posts.rows)
             })
-        }
+        },
         /*characterLimit(content){
             let text = content;
             const maxLength = 350;
@@ -56,6 +57,11 @@ export default {
                 return text;
             }
         }*/
+        dateFormat(date){
+            const event = new Date(date);
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+            return event.toLocaleDateString('fr-FR', options);
+        }
     }
 }
 </script>
@@ -88,8 +94,12 @@ export default {
         font-size: .8rem;
     }
     .post-modify{
-        color: rgb(255, 60, 60);
+        color: rgb(219, 17, 17);
+        font-size: 1rem;
         font-weight: bold;
+    }
+    .post-title{
+        color: red;
     }
     .post-content{
         font-size: .9rem;

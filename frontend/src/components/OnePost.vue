@@ -62,11 +62,9 @@ export default {
     methods: {
         getOnePost(){
             const postId = this.$route.params.id;
+            console.log(this.$route.params.id)
             
-            axios.post(`${this.$apiUrl}/posts/getOnePost`,
-                {
-                    postId,
-                },
+            axios.get(`${this.$apiUrl}/posts/${postId}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -75,7 +73,9 @@ export default {
                 }
             )
             .then(res => {
-                this.post = res.data[0];
+                this.post = res.data.rows[0];
+                console.log(this.post);
+
                 if(this.$user.userId === this.post.userId || this.$user.admin == 1){
                     this.authorized = true;
                  }
@@ -87,10 +87,7 @@ export default {
         deleteOnePost(){
             const postId = this.$route.params.id;
             
-            axios.post(`${this.$apiUrl}/posts/deleteOnePost`,
-                {
-                    postId,
-                },
+            axios.delete(`${this.$apiUrl}/posts/${postId}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -105,7 +102,7 @@ export default {
             const title = document.querySelector('#modify-title').value;
             const content = this.modifiedContent;
             
-            axios.post(`${this.$apiUrl}/posts/modifyOnePost`,
+            axios.put(`${this.$apiUrl}/posts/${postId}`,
                 {
                     postId,
                     title,
