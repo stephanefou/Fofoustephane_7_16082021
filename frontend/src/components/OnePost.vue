@@ -86,7 +86,6 @@ export default {
         },
         deleteOnePost(){
             const postId = this.$route.params.id;
-            
             axios.delete(`${this.$apiUrl}/posts/${postId}`,
                 {
                     headers: {
@@ -101,6 +100,7 @@ export default {
             const postId = this.$route.params.id;
             const title = document.querySelector('#modify-title').value;
             const content = this.modifiedContent;
+            console.log(content);
             
             axios.put(`${this.$apiUrl}/posts/${postId}`,
                 {

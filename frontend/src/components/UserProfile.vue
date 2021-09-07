@@ -26,8 +26,8 @@ export default {
             }
           }
       )
-      /*.then(localStorage.removeItem('user'))
-      .then(location.href = "/");*/
+      .then(localStorage.removeItem('user'))
+      .then(location.href = "/");
     }
   }
 }

@@ -36,11 +36,13 @@
       methods: {
           newComment(){
               const postId = parseInt(this.$route.params.id);
+              console.log(postId);
               const userId = this.$user.userId;
               const content = document.getElementById('new-comment').value;
               axios.post(`${this.$apiUrl}/posts/${postId}/comment/`,
                   {
                       userId,
+                      postId,
                       content
                   },
                   {
@@ -55,6 +57,9 @@
           getAllComments(){
               const postId = parseInt(this.$route.params.id);
               axios.get(`${this.$apiUrl}/posts/${postId}/comments`,
+                    {
+                        postId
+                    },
                   {
                       headers: {
                           'Content-Type': 'application/json',
@@ -64,6 +69,7 @@
               )
               .then(res => {
                   this.comments = res.data;
+                  console.log(this.comments);
               });
           },
           deleteComment(commentId){

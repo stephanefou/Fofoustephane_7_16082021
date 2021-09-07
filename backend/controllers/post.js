@@ -66,7 +66,7 @@ exports.getOnePost = (req, res, next) => {
 };
 // Delete OnePost
 exports.deleteOnePost = (req, res, next) => {
-    db.query(`DELETE FROM posts WHERE posts.id = ${req.body.postId}`, (error, result, field) => {
+    db.query(`DELETE FROM "Posts" WHERE id = '${req.params.id}'`, (error, result, field) => {
         if (error) {
             return res.status(400).json({
                 error
@@ -77,7 +77,11 @@ exports.deleteOnePost = (req, res, next) => {
 };
 // Modify OnePost
 exports.modifyOnePost = (req, res, next) => {
-    db.query(`UPDATE posts SET title = '${req.body.title}', content = '${req.body.content}' WHERE posts.id = ${req.body.postId}`, (error, result, field) => {
+    db.query(`
+        UPDATE "Posts" SET "title" = '${req.body.title}',
+        "content" = '${req.body.content}' WHERE id = '${req.body.postId}'
+    `,
+        (error, result, field) => {
         if (error) {
             return res.status(400).json({
                 error
@@ -107,7 +111,7 @@ exports.getUserPosts = (req, res, next) => {
 exports.newComment = (req, res, next) => {
     db.query(
         `INSERT INTO "Comments" VALUES (
-            Default,
+            nextval('users_id_seq'::regclass), --increment commentaire
             ${req.body.userId},
             ${req.body.postId},
             NOW(),
@@ -129,18 +133,31 @@ exports.newComment = (req, res, next) => {
 };
 // Get all comments
 exports.getAllComments = (req, res, next) => {
-    db.query(`SELECT users.id, users.nom, users.prenom, comments.id,comments.content, comments.userId, DATE_FORMAT(comments.date, "le %e %M %Y à %kh%i") AS date
-    FROM users INNER JOIN comments ON users.id = comments.userId 
-     WHERE comments.postId = ${req.body.postId} 
-     ORDER BY comments.date DESC`,
-        (error, result, field) => {
+    db.query(
+        `SELECT
+            "Users".id,
+            "Users".lastname,
+            "Users".firstname,
+            "Comments".id,
+            "Comments".content,
+            "Comments".user_id,
+            "Comments".publication_date AS date
+            FROM "Users" INNER JOIN "Comments" ON "user_id" WHERE "Comments".post_id = '${req.body.postId}'
+        `,
+        (error, result, rows) => {
+        rows = result.rows;
+        console.log(result);
+        console.log(result.rows);
+        console.log(rows.length);
+        //console.log(result.length);
             if (error) {
                 return res.status(400).json({
                     error
                 });
             }
-            return res.status(200).json(result);
+            return res.status(200).json({rows});
         });
+
 };
 //Delete comment
 exports.deleteComment = (req, res, next) => {

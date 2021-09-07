@@ -84,7 +84,7 @@ exports.login = (req, res, next) => {
 
 // Delete User
 exports.deleteUser = (req, res, next) => {
-  db.query(`DELETE * FROM "Users" WHERE id = ${req.params.id}`,
+  db.query(`DELETE FROM "Users" WHERE id = '${req.params.id}'`,
     (error, result, field) => {
       /*rows = result.rows;
       console.log(result);
