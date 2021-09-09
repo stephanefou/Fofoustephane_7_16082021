@@ -1,3 +1,4 @@
+const { request } = require("../app.js");
 const db = require("../utils/database.js");
 
 // All post
@@ -133,16 +134,20 @@ exports.newComment = (req, res, next) => {
 };
 // Get all comments
 exports.getAllComments = (req, res, next) => {
-    db.query(
+    console.log('req.params',req.params)
+        db.query(
         `SELECT
             "Users".id,
             "Users".lastname,
             "Users".firstname,
             "Comments".id,
-            "Comments".content,
             "Comments".user_id,
-            "Comments".publication_date AS date
-            FROM "Users" INNER JOIN "Comments" ON "user_id" WHERE "Comments".post_id = '${req.body.postId}'
+            "Comments".post_id,
+            "Comments".publication_date,
+            "Comments".content
+            FROM "Users" INNER JOIN "Comments" ON "Users".id = "Comments".user_id
+            WHERE "Comments".post_id = '${req.params.id}'
+            ORDER BY "Comments".publication_date DESC;
         `,
         (error, result, rows) => {
         rows = result.rows;
@@ -157,11 +162,10 @@ exports.getAllComments = (req, res, next) => {
             }
             return res.status(200).json({rows});
         });
-
 };
 //Delete comment
 exports.deleteComment = (req, res, next) => {
-    db.query(`DELETE FROM comments WHERE comments.id = ${req.body.commentId}`, (error, result, field) => {
+    db.query(`DELETE FROM "Comments" WHERE id = ${req.params.id}`, (error, result, field) => {
         if (error) {
             return res.status(400).json({
                 error

@@ -76,7 +76,7 @@ export default {
                 this.post = res.data.rows[0];
                 console.log(this.post);
 
-                if(this.$user.userId === this.post.userId || this.$user.admin == 1){
+                if(this.$user.userId === this.post.user_id || this.$user.admin == 1){
                     this.authorized = true;
                  }
                 else{
