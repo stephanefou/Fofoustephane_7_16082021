@@ -67,7 +67,8 @@ exports.getOnePost = (req, res, next) => {
 };
 // Delete OnePost
 exports.deleteOnePost = (req, res, next) => {
-    db.query(`DELETE FROM "Posts" WHERE id = '${req.params.id}'`, (error, result, field) => {
+    db.query(`DELETE FROM "Posts" WHERE id = '${req.params.id}';
+    DELETE FROM "Comments" WHERE "Comments".post_id = '${req.params.id}'`, (error, result, field) => {
         if (error) {
             return res.status(400).json({
                 error

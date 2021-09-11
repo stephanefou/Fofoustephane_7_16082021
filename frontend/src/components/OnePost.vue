@@ -34,7 +34,7 @@
 
         <button v-if="authorized && !modify" @click="modify = true">Modifier</button>
         <button v-if="modify" @click="modify = false">Annuler</button>
-        <button v-if="modify" @click="modifyOnePost()">Publier les modifications</button>
+        <button v-if="modify && $user.userId === this.post.user_id" @click="modifyOnePost()">Publier les modifications</button>
         <button v-if="modify" class="delete-btn" @click="deleteOnePost()">Supprimer le post</button>
     </div>
     
